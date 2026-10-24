@@ -1,7 +1,7 @@
 {
-  "name": "Word Lab 5000",
+  "name": "Word Lab",
   "short_name": "Word Lab",
-  "description": "เรียนศัพท์ Oxford 3000 + 5000 ระดับ A1–C1 พร้อมคำแปลไทย ตัวอย่าง และ checklist",
+  "description": "เรียนศัพท์ Oxford 3000 + 5000 และ TOEFL พร้อมคำแปลไทย ตัวอย่าง และ checklist",
   "lang": "th",
   "start_url": "./",
   "scope": "./",
