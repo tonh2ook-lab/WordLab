@@ -231,6 +231,42 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
 .toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(30px);background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:999px;font-size:13.5px;opacity:0;transition:all .25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* ---------- LOGIN ---------- */
+.login{position:fixed;inset:0;z-index:90;overflow:auto;background:radial-gradient(120% 120% at 80% 0%,#1C4F9C 0%,var(--navy) 50%,#06163A 100%);color:#F1F5FF;display:grid;place-items:center;padding-block:max(24px,env(safe-area-inset-top,0px)) max(24px,env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.login-card{width:100%;max-width:400px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+#loginOrb{width:150px;height:150px;margin-bottom:10px;filter:drop-shadow(0 10px 30px rgba(124,208,242,.25))}
+.login h1{font-family:var(--f-head);font-size:34px;font-weight:700;margin:2px 0 0;line-height:1.1}
+.login p{margin:0;color:rgba(241,245,255,.75);font-size:14px}
+.login form{display:flex;flex-direction:column;gap:10px;width:100%;margin-top:18px}
+.login input[type=text]{width:100%;padding:13px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-size:16px;text-align:center;letter-spacing:.04em;outline:none}
+.login input[type=text]::placeholder{color:rgba(241,245,255,.5)}
+.login input[type=text]:focus{border-color:var(--sky);background:rgba(255,255,255,.12)}
+.login button{padding:12px;border-radius:12px;border:0;background:#fff;color:var(--navy);font-weight:700;font-size:15px}
+.login button:hover{background:#E6F2FF}
+.login .rem{display:flex;gap:8px;align-items:center;justify-content:center;font-size:13px;color:rgba(241,245,255,.75);margin-top:2px;cursor:pointer}
+.login-err{min-height:22px;color:#FFB3CF!important;font-size:13.5px!important;margin-top:4px!important}
+.login .shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.login-foot{margin-top:22px!important;font-size:12px!important;color:rgba(241,245,255,.5)!important}
+/* ---------- USER + CLOUD ---------- */
+.userbox{display:flex;align-items:center;gap:6px;padding-left:10px;white-space:nowrap}
+.userchip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--ink)}
+.userchip .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;color:#fff;background:linear-gradient(135deg,var(--link),var(--plum),var(--magenta))}
+.btn.sm{padding:5px 10px;font-size:12.5px}
+.sync{cursor:default}
+.sync.dirty i{background:var(--star)} .sync.busy i{background:var(--sky)}
+.modal{position:fixed;inset:0;z-index:80;background:rgba(6,14,34,.55);display:grid;place-items:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px}
+.modal-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:520px;padding:24px;max-height:90vh;overflow:auto}
+.modal-card h3{font-family:var(--f-head);font-size:21px;margin:0 0 6px}
+.modal-card p{margin:0 0 12px;font-size:14px;color:var(--muted)}
+.modal-card label.f{display:block;font-size:13px;font-weight:600;margin:12px 0 4px}
+.modal-card input.in{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);font-family:var(--f-mono);font-size:13px}
+.modal-card code{font-family:var(--f-mono);font-size:12.5px;background:var(--surface2);padding:1px 5px;border-radius:5px}
+.modal-card a{color:var(--link)}
+.modal-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.cm-msg{margin-top:12px!important;font-size:13.5px!important;min-height:20px}
+.cm-msg.ok{color:var(--ok)!important} .cm-msg.bad{color:var(--magenta)!important}
+
 /* ---------- PHONE: rows become cards ---------- */
 @media (max-width:760px){
   .hero .wrap{grid-template-columns:1fr;justify-items:start;gap:16px}
@@ -261,6 +297,42 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
+<div class="login" id="login" hidden>
+  <div class="login-card">
+    <canvas id="loginOrb" width="300" height="300" aria-hidden="true"></canvas>
+    <div class="eyebrow">The Oxford 3000™ + 5000™ · A1–C1</div>
+    <h1>Word Lab 5000</h1>
+    <p>ใส่รหัสผู้ใช้เพื่อเปิดสมุดคำศัพท์ของคุณ</p>
+    <form id="loginForm" autocomplete="off">
+      <input type="text" id="loginId" placeholder="รหัสผู้ใช้" aria-label="รหัสผู้ใช้" autocapitalize="none" spellcheck="false">
+      <button type="submit">เข้าสู่ระบบ</button>
+      <label class="rem"><input type="checkbox" id="loginRemember" checked> จำการเข้าสู่ระบบในเครื่องนี้</label>
+    </form>
+    <p class="login-err" id="loginErr" role="alert"></p>
+    <p class="login-foot" id="loginVer"></p>
+  </div>
+</div>
+
+<div class="modal" id="cloudModal" hidden>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="cmTitle">
+    <h3 id="cmTitle">ซิงก์ความคืบหน้าขึ้นคลาวด์</h3>
+    <p>ข้อมูลการเรียนของ <b id="cmUser"></b> จะเก็บเป็นไฟล์ <code id="cmFile"></code> ใน secret gist บน GitHub ของคุณ เปิดเครื่องไหนก็เรียนต่อได้ และซิงก์ให้อัตโนมัติทุกครั้งที่ติ๊ก</p>
+    <label class="f" for="ghToken">GitHub token (สิทธิ์ gist)</label>
+    <input class="in" type="password" id="ghToken" autocomplete="off" spellcheck="false" placeholder="ghp_… หรือ github_pat_…">
+    <label class="f" for="ghGist">Gist ID</label>
+    <input class="in" type="text" id="ghGist" autocomplete="off" spellcheck="false" placeholder="เว้นว่างได้ ระบบจะสร้างให้ตอนซิงก์ครั้งแรก">
+    <p style="margin-top:10px;font-size:12.5px">สร้าง token ได้ที่ <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">github.com/settings/tokens</a> โดยติ๊กสิทธิ์ <code>gist</code> (ใช้ token เดียวกับระบบอื่นได้) · token เก็บไว้ในเครื่องนี้เท่านั้น ไม่ถูกส่งขึ้นคลาวด์ · เครื่องอื่นให้กรอก token และ Gist ID ชุดเดียวกัน</p>
+    <div class="modal-row">
+      <button class="btn primary" id="cmSave">บันทึกและซิงก์</button>
+      <button class="btn" id="cmPull">ดึงจากคลาวด์มาแทนที่</button>
+      <button class="btn" id="cmClear">ลบ token ออกจากเครื่องนี้</button>
+      <button class="btn" id="cmClose" style="margin-left:auto">ปิด</button>
+    </div>
+    <p class="cm-msg" id="cmMsg"></p>
+  </div>
+</div>
+
+<div id="app" hidden>
 </head>
 <body>
 <header class="hero">
@@ -270,7 +342,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
       <div class="orb-label"><div class="orb-pct" id="orbPct">0%</div><div class="orb-sub">จำได้แล้ว</div></div>
     </div>
     <div style="min-width:0">
-      <div class="eyebrow">The Oxford 3000™ + 5000™ · ระดับ A1–C1</div>
+      <div class="eyebrow" id="heroEyebrow">The Oxford 3000™ + 5000™ · ระดับ A1–C1</div>
       <h1>Word Lab 5000 <em>ทีละคำ ทุกวัน</em></h1>
       <p class="lede">คำศัพท์หลักราว 5,000 คำ ตั้งแต่ A1 ถึง C1 (5,325 รายการ แยกตามชนิดคำ) พร้อมคำแปลไทย ตัวอย่างการใช้ และ checklist ว่าอ่านแล้วหรือจำได้แล้ว เหลี่ยมของลูกแก้วจะสว่างขึ้นตามคำที่จำได้</p>
       <div class="stats" id="stats"></div>
@@ -292,7 +364,8 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
     <button class="tab" role="tab" data-tab="list" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>ตารางคำศัพท์</button>
     <button class="tab" role="tab" data-tab="cards" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="14" rx="2"/><path d="M7 3h12a2 2 0 0 1 2 2v12"/></svg>แฟลชการ์ด</button>
     <button class="tab" role="tab" data-tab="quiz" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 .5c0 1.5-2.5 2-2.5 3.5M12 17h.01"/></svg>แบบทดสอบ</button>
-    <div class="sync" id="sync"><i></i><span>บันทึกไว้ในเบราว์เซอร์นี้</span></div>
+    <div class="sync" id="sync"><i></i><span>บันทึกไว้ในเครื่องนี้</span></div>
+    <div class="userbox"><button class="btn sm" id="cloudBtn">☁ คลาวด์</button><span class="userchip"><span class="av" id="userAv">?</span><span id="userName"></span></span><button class="btn sm" id="logoutBtn">ออกจากระบบ</button></div>
   </div>
 </nav>
 
@@ -351,10 +424,11 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
   </section>
 
   <div class="foot">
-    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.0</span></span>
+    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.1</span></span>
     <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span id="backupBox" hidden style="display:inline-flex;gap:6px"><button class="btn" id="expBtn">สำรองความคืบหน้า (.json)</button><label class="btn" style="cursor:pointer">นำเข้าไฟล์สำรอง<input type="file" id="impFile" accept=".json,application/json" hidden></label></span><span id="resetBox"><button class="btn" id="resetBtn">ล้างความคืบหน้า</button></span></span>
   </div>
 </main>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -363,17 +437,25 @@ var RAW = [[1,"a, an","indefinite article","A1",["คำนำหน้านา
 <script>
 (function(){
 'use strict';
-var APP_VERSION='V2.0';
+var APP_VERSION='V2.1';
 var W=RAW.map(function(a){return {id:a[0],w:a[1],p:a[2],l:a[3],th:a[4],ex:a[5],exth:a[6],note:a[7]||'',src:a[8],o:a[9]};});
 var OLDMAP={}; W.forEach(function(x){if(x.o)OLDMAP[x.o]=x.id;});
 var LEVELS=['A1','A2','B1','B2','C1'], LVN={}; LEVELS.forEach(function(l){LVN[l]=W.filter(function(x){return x.l===l;}).length;});
 var BYID={}; W.forEach(function(x){BYID[x.id]=x;});
 var TOTAL=W.length;
 
+/* ---------- users: what they type → name shown in the app ---------- */
+var USERS={
+  tonnam:{name:'ต้นน้ำ'}
+};
+var USER=null, SESSION_KEY='wordlab.session';
+
 /* ---------- state ---------- */
-var S={r:new Set(),k:new Set(),s:new Set(),days:{},goal:20,lvl:'all',t:0};
+function freshState(){return {r:new Set(),k:new Set(),s:new Set(),days:{},goal:20,lvl:'all',t:0};}
+var S=freshState();
 var LS='wordlab5000.v2', LS_OLD='b2c1-word-lab.v1';
-function serialize(){return {v:2,r:Array.from(S.r),k:Array.from(S.k),s:Array.from(S.s),days:S.days,goal:S.goal,lvl:S.lvl,t:S.t};}
+function userKey(){return LS+'::'+USER.id;}
+function serialize(){return {v:2,user:USER?USER.id:'',r:Array.from(S.r),k:Array.from(S.k),s:Array.from(S.s),days:S.days,goal:S.goal,lvl:S.lvl,t:S.t};}
 /* V1 saved ids of the B2–C1-only list; translate them to V2 ids */
 function upgrade(o){if(!o||o.v===2)return o;var m=function(arr){return (arr||[]).map(function(i){return OLDMAP[i];}).filter(Boolean);};o.r=m(o.r);o.k=m(o.k);o.s=m(o.s);o.v=2;return o;}
 function load(o){
@@ -387,41 +469,134 @@ function load(o){
   S.lvl=LEVELS.indexOf(o.lvl)>=0?o.lvl:'all';
   S.t=+o.t||0;
 }
-try{var saved=localStorage.getItem(LS)||localStorage.getItem(LS_OLD); if(saved) load(JSON.parse(saved));}catch(e){}
+/* both sides changed: keep every tick from either side */
+function mergeInto(o){
+  o=upgrade(o);
+  (o.r||[]).forEach(function(i){if(BYID[i])S.r.add(i);});
+  (o.k||[]).forEach(function(i){if(BYID[i]){S.k.add(i);S.r.add(i);}});
+  (o.s||[]).forEach(function(i){if(BYID[i])S.s.add(i);});
+  if(o.days&&typeof o.days==='object')Object.keys(o.days).forEach(function(k){S.days[k]=Math.max(S.days[k]||0,+o.days[k]||0);});
+}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,v);}catch(e){}}
+function saveLocal(){lsSet(userKey(),JSON.stringify(serialize()));}
+function loadLocal(){
+  S=freshState();
+  var s=lsGet(userKey());
+  if(!s&&!lsGet(LS+'.claimed')){
+    /* progress saved before user codes existed goes to the first person who signs in */
+    s=lsGet(LS)||lsGet(LS_OLD);
+    if(s)lsSet(LS+'.claimed',USER.id);
+  }
+  if(s){try{load(JSON.parse(s));}catch(e){}}
+}
+function getSynced(){return +(lsGet(userKey()+'.synced')||0);}
+function setSynced(t){lsSet(userKey()+'.synced',String(t));}
 
-var dbRef=null, saveTimer=null, saveChain=Promise.resolve();
-function persist(){
-  S.t=Date.now();
-  try{localStorage.setItem(LS,JSON.stringify(serialize()));}catch(e){}
-  if(!dbRef)return;
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(function(){
-    var data=serialize();
-    saveChain=saveChain.then(function(){return dbRef.set(data);}).then(function(){setSync('cloud');},function(){setSync('err');});
-  },900);
+/* ---------- cloud: claude.ai storage inside Claude, GitHub Gist everywhere else ---------- */
+var IN_CLAUDE=!!(window.claude&&window.claude.use);
+var CLOUD={kind:'none',ready:false,db:null}, pushTimer=null, pushing=Promise.resolve();
+function ghCfg(){return {token:lsGet('wordlab.gh.token')||'',gist:lsGet('wordlab.gh.gist')||''};}
+function ghFile(){return 'wordlab_'+USER.id+'.json';}
+function gh(path,method,body){
+  var c=ghCfg(),opt={method:method||'GET',cache:'no-store',headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+c.token}};
+  if(body){opt.body=body;opt.headers['Content-Type']='application/json';if(body.length<60000)opt.keepalive=true;}
+  return fetch('https://api.github.com'+path,opt).then(function(r){
+    if(r.status===401||r.status===403)throw new Error('token ไม่ถูกต้องหรือไม่มีสิทธิ์ gist');
+    if(r.status===404)throw new Error('ไม่พบ Gist ID นี้');
+    if(!r.ok)throw new Error('GitHub ตอบกลับ '+r.status);
+    return r.json();
+  });
 }
-function setSync(m){
-  var el=document.getElementById('sync');
-  el.className='sync '+m;
-  el.querySelector('span').textContent= m==='cloud'?'ซิงก์กับบัญชีแล้ว (ใช้ได้ทุกอุปกรณ์)': m==='err'?'ซิงก์ไม่สำเร็จ บันทึกในเบราว์เซอร์แทน':'บันทึกไว้ในเบราว์เซอร์นี้';
+function cloudRead(){
+  if(CLOUD.kind==='db'){
+    return CLOUD.db.doc.get().then(function(sn){
+      if(sn.exists)return sn.data();
+      if(USER.id!==Object.keys(USERS)[0])return null;
+      return CLOUD.db.legacy.get().then(function(l){return l.exists?l.data():null;});
+    });
+  }
+  var c=ghCfg(); if(!c.gist)return Promise.resolve(null);
+  return gh('/gists/'+c.gist).then(function(g){
+    var f=g.files&&g.files[ghFile()]; if(!f)return null;
+    if(f.truncated)return fetch(f.raw_url,{cache:'no-store'}).then(function(r){return r.json();});
+    return JSON.parse(f.content);
+  });
 }
-(function connect(){
-  if(!window.claude||!window.claude.use)return;
-  Promise.all([window.claude.use('db'),window.claude.use('user')]).then(function(res){
-    var db=res[0],user=res[1];
-    if(!db||!user)return null;
-    return user.id().then(function(id){
-      if(!id)return null;
-      dbRef=db.collection('data/users/'+id).doc('progress');
-      return dbRef.get().then(function(snap){
-        var remote=snap.exists?snap.data():null;
-        if(remote&&(+remote.t||0)>=S.t){load(remote);try{localStorage.setItem(LS,JSON.stringify(serialize()));}catch(e){} renderAll();}
-        else if(S.t>0){saveChain=saveChain.then(function(){return dbRef.set(serialize());});}
-        setSync('cloud');
+function cloudWrite(data){
+  if(CLOUD.kind==='db')return CLOUD.db.doc.set(data);
+  var c=ghCfg(),files={}; files[ghFile()]={content:JSON.stringify(data)};
+  if(!c.gist)return gh('/gists','POST',JSON.stringify({description:'Word Lab 5000 · ความคืบหน้าการเรียน',public:false,files:files})).then(function(g){lsSet('wordlab.gh.gist',g.id);var gi=document.getElementById('ghGist');if(gi)gi.value=g.id;});
+  return gh('/gists/'+c.gist,'PATCH',JSON.stringify({files:files}));
+}
+function cloudInit(){
+  if(IN_CLAUDE){
+    return Promise.all([window.claude.use('db'),window.claude.use('user')]).then(function(res){
+      var db=res[0],user=res[1]; if(!db||!user)return false;
+      return user.id().then(function(id){
+        if(!id)return false;
+        var col=db.collection('data/users/'+id);
+        CLOUD.kind='db'; CLOUD.db={doc:col.doc('progress_'+USER.id),legacy:col.doc('progress')}; return true;
       });
     });
-  }).catch(function(){setSync('err');});
-})();
+  }
+  CLOUD.kind='gist'; return Promise.resolve(!!ghCfg().token);
+}
+function cloudStart(){
+  CLOUD.ready=false; setSync('local');
+  var who=USER&&USER.id;
+  return cloudInit().then(function(ok){
+    if(!ok||!USER||USER.id!==who)return;
+    CLOUD.ready=true; setSync('busy');
+    return cloudRead().then(function(remote){
+      if(!USER||USER.id!==who)return;
+      var synced=getSynced(), localDirty=S.t>synced;
+      if(remote){
+        var rt=+remote.t||0;
+        if(!localDirty||S.t===0){load(remote);}                 // nothing new here: take the cloud copy
+        else if(rt>synced){mergeInto(remote);S.t=Date.now();}    // both changed: keep everything
+        saveLocal(); renderAll();
+        if(S.t===rt){setSynced(rt);setSync('cloud');return;}
+        return pushNow();
+      }
+      if(S.t>0)return pushNow();
+      setSync('cloud');
+    });
+  }).catch(function(e){setSync('err',e&&e.message);});
+}
+function pushNow(){
+  clearTimeout(pushTimer); pushTimer=null;
+  if(!CLOUD.ready||!USER)return Promise.resolve();
+  var who=USER.id;
+  pushing=pushing.then(function(){
+    if(!USER||USER.id!==who)return;
+    setSync('busy');
+    return cloudRead().then(function(remote){
+      if(remote&&(+remote.t||0)>getSynced()&&(+remote.t||0)!==S.t){mergeInto(remote);S.t=Date.now();saveLocal();renderAll();}
+      var data=serialize();
+      return cloudWrite(data).then(function(){setSynced(data.t);setSync('cloud');});
+    });
+  }).catch(function(e){setSync('err',e&&e.message);});
+  return pushing;
+}
+function persist(){
+  S.t=Date.now(); saveLocal();
+  if(!CLOUD.ready)return;
+  setSync('dirty'); clearTimeout(pushTimer);
+  pushTimer=setTimeout(pushNow,CLOUD.kind==='gist'?2500:900);
+}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&pushTimer)pushNow();});
+var lastSyncAt='';
+function setSync(m,msg){
+  var el=document.getElementById('sync'); el.className='sync '+m;
+  if(m==='cloud'){var d=new Date();lastSyncAt=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
+  var txt= m==='cloud'?'ซิงก์คลาวด์แล้ว '+lastSyncAt
+    : m==='dirty'?'มีการแก้ไข รอซิงก์…'
+    : m==='busy'?'กำลังซิงก์…'
+    : m==='err'?'ซิงก์ไม่สำเร็จ ข้อมูลยังอยู่ในเครื่องนี้'
+    : (IN_CLAUDE?'บันทึกไว้ในเครื่องนี้':'บันทึกในเครื่องนี้ · ยังไม่เชื่อมคลาวด์');
+  el.querySelector('span').textContent=txt; el.title=msg||'';
+}
 
 /* ---------- helpers ---------- */
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -507,8 +682,8 @@ var FACETS=(function(){
   return {tris:tris,rank:rank,cols:cols};
 })();
 var orbShown=0;
-function drawOrb(frac){
-  var cv=document.getElementById('orb'),ctx=cv.getContext('2d'),W2=cv.width,R=W2/2-6;
+function drawOrb(frac,cid){
+  var cv=document.getElementById(cid||'orb'),ctx=cv.getContext('2d'),W2=cv.width,R=W2/2-6;
   ctx.clearRect(0,0,W2,W2);
   var n=FACETS.tris.length,lit=Math.round(frac*n), litMin=frac>0?Math.max(1,lit):0;
   ctx.save();ctx.translate(W2/2,W2/2);
@@ -799,7 +974,7 @@ if(!(window.claude&&window.claude.use)){
   var bb=document.getElementById('backupBox');bb.hidden=false;
   document.getElementById('expBtn').onclick=function(){
     var blob=new Blob([JSON.stringify(serialize())],{type:'application/json'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='WordLab_progress_'+todayKey()+'.json';
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='WordLab_'+USER.id+'_'+todayKey()+'.json';
     document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
     toast('ดาวน์โหลดไฟล์สำรองแล้ว');
   };
@@ -826,9 +1001,106 @@ if(!(window.claude&&window.claude.use)){
 
 function renderAll(){renderHeader();renderList();if(DECK&&!document.getElementById('p-cards').hidden)renderCard();}
 document.getElementById('ver').textContent=APP_VERSION;
-renderLetters();renderAll();
-try{var lt=localStorage.getItem(LS+'.tab');if(lt&&lt!=='list')switchTab(lt);}catch(e){}
-try{if(/[?&]start=today/.test(location.search))document.getElementById('startToday').click();}catch(e){}
+/* ---------- sign in / out ---------- */
+var booted=false;
+function showLogin(){
+  document.getElementById('app').hidden=true;
+  document.getElementById('login').hidden=false;
+  document.getElementById('loginVer').textContent='Word Lab 5000 · '+APP_VERSION;
+  drawOrb(1,'loginOrb');
+  var inp=document.getElementById('loginId'); inp.value=''; setTimeout(function(){inp.focus();},50);
+}
+function loginAs(id,remember){
+  USER={id:id,name:USERS[id].name};
+  lsSet(SESSION_KEY,remember?id:null);
+  try{if(remember)sessionStorage.removeItem(SESSION_KEY);else sessionStorage.setItem(SESSION_KEY,id);}catch(e){}
+  loadLocal(); DECK=null; QZ=null;
+  document.getElementById('userName').textContent=USER.name;
+  document.getElementById('userAv').textContent=USER.name.charAt(0);
+  document.getElementById('heroEyebrow').textContent='สวัสดี '+USER.name+' · The Oxford 3000™ + 5000™ · ระดับ A1–C1';
+  document.getElementById('cloudBtn').hidden=IN_CLAUDE;
+  document.getElementById('login').hidden=true;
+  document.getElementById('app').hidden=false;
+  orbShown=0;
+  if(!booted){booted=true;renderLetters();}
+  var lt=lsGet(LS+'.tab');
+  switchTab(lt==='cards'||lt==='quiz'?lt:'list'); renderAll();
+  try{if(/[?&]start=today/.test(location.search)){document.getElementById('startToday').click();history.replaceState(null,'',location.pathname);}}catch(e){}
+  cloudStart();
+}
+function logout(){
+  var done=function(){
+    USER=null; S=freshState(); CLOUD.ready=false; DECK=null; QZ=null;
+    lsSet(SESSION_KEY,null); try{sessionStorage.removeItem(SESSION_KEY);}catch(e){}
+    showLogin();
+  };
+  if(pushTimer){pushNow().then(done,done);}else done();
+}
+document.getElementById('loginForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var id=document.getElementById('loginId').value.trim().toLowerCase();
+  var err=document.getElementById('loginErr');
+  if(!id){err.textContent='กรุณาใส่รหัสผู้ใช้';return;}
+  if(!USERS.hasOwnProperty(id)){
+    err.textContent='ไม่พบรหัสผู้ใช้นี้ ลองตรวจตัวสะกดอีกครั้ง';
+    var c=document.querySelector('.login-card');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');
+    return;
+  }
+  err.textContent='';
+  loginAs(id,document.getElementById('loginRemember').checked);
+});
+document.getElementById('logoutBtn').addEventListener('click',logout);
+
+/* ---------- cloud settings ---------- */
+function cmMsg(txt,cls){var m=document.getElementById('cmMsg');m.textContent=txt;m.className='cm-msg '+(cls||'');}
+var pullArmed=false;
+function openCloud(){
+  var c=ghCfg();
+  document.getElementById('cmUser').textContent=USER.name;
+  document.getElementById('cmFile').textContent=ghFile();
+  document.getElementById('ghToken').value=c.token;
+  document.getElementById('ghGist').value=c.gist;
+  pullArmed=false; document.getElementById('cmPull').textContent='ดึงจากคลาวด์มาแทนที่';
+  cmMsg(CLOUD.ready?'เชื่อมคลาวด์อยู่ · '+document.querySelector('#sync span').textContent:'');
+  document.getElementById('cloudModal').hidden=false;
+}
+document.getElementById('cloudBtn').addEventListener('click',openCloud);
+document.getElementById('cmClose').addEventListener('click',function(){document.getElementById('cloudModal').hidden=true;});
+document.getElementById('cloudModal').addEventListener('click',function(e){if(e.target===this)this.hidden=true;});
+document.getElementById('cmSave').addEventListener('click',function(){
+  var tok=document.getElementById('ghToken').value.trim(), gid=document.getElementById('ghGist').value.trim();
+  var m=gid.match(/([0-9a-f]{20,})\/?$/i); if(m)gid=m[1];
+  if(!tok){cmMsg('กรุณาใส่ GitHub token','bad');return;}
+  lsSet('wordlab.gh.token',tok); lsSet('wordlab.gh.gist',gid||null);
+  cmMsg('กำลังเชื่อมต่อ…');
+  cloudStart().then(function(){
+    var st=document.getElementById('sync').className;
+    if(/cloud/.test(st)){document.getElementById('ghGist').value=ghCfg().gist;cmMsg('ซิงก์สำเร็จ · Gist ID: '+ghCfg().gist+' (ใช้ชุดนี้กับเครื่องอื่น)','ok');}
+    else cmMsg('เชื่อมต่อไม่สำเร็จ: '+(document.getElementById('sync').title||'ตรวจ token และ Gist ID อีกครั้ง'),'bad');
+  });
+});
+document.getElementById('cmPull').addEventListener('click',function(){
+  var b=this;
+  if(!CLOUD.ready){cmMsg('ยังไม่ได้เชื่อมคลาวด์ กด "บันทึกและซิงก์" ก่อน','bad');return;}
+  if(!pullArmed){pullArmed=true;b.textContent='กดอีกครั้งเพื่อยืนยัน (ข้อมูลในเครื่องนี้จะถูกแทนที่)';return;}
+  pullArmed=false;b.textContent='ดึงจากคลาวด์มาแทนที่';cmMsg('กำลังดึงข้อมูล…');
+  clearTimeout(pushTimer);pushTimer=null;
+  cloudRead().then(function(remote){
+    if(!remote){cmMsg('ยังไม่มีข้อมูลของ '+USER.name+' บนคลาวด์','bad');return;}
+    S=freshState();load(remote);saveLocal();setSynced(S.t);renderAll();setSync('cloud');
+    cmMsg('ดึงข้อมูลแล้ว · จำได้ '+S.k.size+' คำ อ่านแล้ว '+S.r.size+' คำ','ok');
+  }).catch(function(e){cmMsg('ดึงไม่สำเร็จ: '+e.message,'bad');});
+});
+document.getElementById('cmClear').addEventListener('click',function(){
+  lsSet('wordlab.gh.token',null); document.getElementById('ghToken').value='';
+  CLOUD.ready=false; setSync('local'); cmMsg('ลบ token ออกจากเครื่องนี้แล้ว (Gist ID ยังเก็บไว้)','ok');
+});
+
+/* ---------- boot ---------- */
+(function(){
+  var sid=lsGet(SESSION_KEY); try{sid=sid||sessionStorage.getItem(SESSION_KEY);}catch(e){}
+  if(sid&&USERS.hasOwnProperty(sid))loginAs(sid,!!lsGet(SESSION_KEY)); else showLogin();
+})();
 })();
 </script>
 <script>
