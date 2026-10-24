@@ -18,7 +18,7 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
 <title>Word Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,400&family=Noto+Serif+Thai:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
 /* Level colours: A1 sky → A2 green → B1 amber → B2 blue → C1 plum (the CEFR climb) */
 :root{--a1:#0A7FAD;--a1bg:#DFF3FB;--a2:#167A57;--a2bg:#E0F3EA;--b1:#955800;--b1bg:#FBEFD9;--tf:#334E6E;--tfbg:#E4EAF3}
@@ -33,9 +33,10 @@
   --ok:#1E8A5A; --okbg:#E3F4EC; --readc:#2E6FC4; --readbg:#E8F0FC; --star:#D9961A;
   --hl:#CDE7FA; --hlink:#0A2B5E;
   --shadow:0 1px 2px rgba(16,32,70,.06),0 6px 22px rgba(16,32,70,.06);
-  --f-head:'Literata',Georgia,'Times New Roman',serif;
+  --f-head:'Literata','Noto Serif Thai',Georgia,serif;
+  --f-thai-head:'Noto Serif Thai','Literata',serif;
   --f-body:'IBM Plex Sans Thai','Sarabun','Noto Sans Thai',system-ui,sans-serif;
-  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --f-mono:'IBM Plex Mono','IBM Plex Sans Thai',ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0A101D; --surface:#111A2C; --surface2:#0E1626; --line:#243150; --line2:#1B2640;
@@ -70,8 +71,9 @@ button{cursor:pointer}
 .orb-pct{font-family:var(--f-head);font-size:34px;font-weight:700;line-height:1}
 .orb-sub{font-size:11px;letter-spacing:.08em;opacity:.9}
 .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--sky);font-weight:600}
+.eyebrow.th,.eyebrow .th{letter-spacing:.01em;text-transform:none;font-size:13px}
 .hero h1{font-family:var(--f-head);font-weight:700;font-size:clamp(26px,3.4vw,38px);line-height:1.1;margin:4px 0 4px;text-wrap:balance}
-.hero h1 em{font-style:italic;font-weight:400;color:#B9D9FF}
+.hero h1 em{font-family:var(--f-thai-head);font-style:normal;font-weight:500;font-size:.78em;color:#B9D9FF;margin-left:.15em}
 .hero .lede{margin:0;color:rgba(241,245,255,.78);font-size:14px;max-width:62ch}
 .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .stat{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px 14px;min-width:112px}
@@ -127,7 +129,7 @@ main{padding-block:20px 48px}
 /* ---------- WORD TABLE ---------- */
 .tbl-wrap{background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow-x:auto}
 table.wt{width:100%;border-collapse:collapse;min-width:980px}
-.wt th{position:sticky;top:0;background:var(--surface2);text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.wt th{position:sticky;top:0;background:var(--surface2);text-align:left;font-size:11.5px;font-weight:600;letter-spacing:.01em;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
 .wt td{padding:12px;border-bottom:1px solid var(--line2);vertical-align:top}
 .wt tr:last-child td{border-bottom:0}
 .wt tr.is-read td{background:color-mix(in srgb,var(--readbg) 35%,transparent)}
@@ -195,7 +197,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
 .fc-hint{margin-top:22px;font-size:13px;color:var(--faint)}
 .fc-cloze{margin-top:22px;font-family:var(--f-head);font-size:16px;color:var(--muted);max-width:52ch}
 .back .fc-hw{font-size:28px}
-.back h4{margin:16px 0 6px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:600}
+.back h4{margin:16px 0 6px;font-size:12.5px;letter-spacing:.01em;color:var(--faint);font-weight:600}
 .back ol{margin:0;padding-left:22px;font-size:17px}
 .back .ex-en{font-size:18px}
 .fc-actions{display:grid;grid-template-columns:auto 1fr 1fr auto;gap:10px;margin-top:16px}
@@ -243,8 +245,8 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
 .login input[type=text]{width:100%;padding:13px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-size:16px;text-align:center;letter-spacing:.04em;outline:none}
 .login input[type=text]::placeholder{color:rgba(241,245,255,.5)}
 .login input[type=text]:focus{border-color:var(--sky);background:rgba(255,255,255,.12)}
-.login button{padding:12px;border-radius:12px;border:0;background:#fff;color:var(--navy);font-weight:700;font-size:15px}
-.login button:hover{background:#E6F2FF}
+.login form button{padding:12px;border-radius:12px;border:0;background:#fff;color:var(--navy);font-weight:700;font-size:15px}
+.login form button:hover{background:#E6F2FF}
 .login .rem{display:flex;gap:8px;align-items:center;justify-content:center;font-size:13px;color:rgba(241,245,255,.75);margin-top:2px;cursor:pointer}
 .login-err{min-height:22px;color:#FFB3CF!important;font-size:13.5px!important;margin-top:4px!important}
 .login .shake{animation:shake .35s}
@@ -252,21 +254,25 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
 .login-foot{margin-top:22px!important;font-size:12px!important;color:rgba(241,245,255,.5)!important}
 /* ---------- DECK CHOOSER ---------- */
 .deck-wrap{width:100%;max-width:760px;text-align:center}
-.deck-wrap h2{font-family:var(--f-head);font-size:30px;margin:4px 0 4px;line-height:1.15}
+.deck-wrap h2{font-family:var(--f-thai-head);font-weight:700;font-size:30px;margin:4px 0 4px;line-height:1.15}
 .deck-wrap .sub{color:rgba(241,245,255,.75);margin:0 0 22px;font-size:14.5px}
 .decks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;text-align:left}
-.deck{position:relative;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);border-radius:20px;padding:20px;color:#F1F5FF;display:flex;flex-direction:column;gap:10px;transition:transform .15s,background .15s,border-color .15s;font:inherit;text-align:left;cursor:pointer}
-.deck:hover{transform:translateY(-3px);background:rgba(255,255,255,.1);border-color:rgba(124,208,242,.6)}
-.deck.last{border-color:rgba(124,208,242,.55)}
+.login .deck{--acc1:#1F62B3;--acc2:#7CD0F2;position:relative;overflow:hidden;border:0;background:#FFFFFF;color:#16223B;border-radius:20px;padding:24px 22px 20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 18px 44px rgba(2,10,30,.45);transition:transform .18s,box-shadow .18s;font:inherit;text-align:left;cursor:pointer}
+.login .deck[data-deck="toefl"]{--acc1:#8A2F7E;--acc2:#E472B0}
+.login .deck::before{content:"";position:absolute;inset:0 0 auto;height:6px;background:linear-gradient(90deg,var(--acc1),var(--acc2))}
+.login .deck:hover{transform:translateY(-4px);box-shadow:0 26px 56px rgba(2,10,30,.55)}
+.login .deck:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
 .deck .top{display:flex;align-items:center;gap:14px}
-.deck canvas{width:64px;height:64px;flex-shrink:0}
-.deck h3{font-family:var(--f-head);font-size:22px;margin:0;line-height:1.15}
-.deck .ds{font-size:13px;color:rgba(241,245,255,.72);margin:2px 0 0}
-.deck .bar{height:6px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden}
-.deck .bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#7CD0F2,#B48AE6,#E472B0)}
-.deck .nums{display:flex;justify-content:space-between;font-size:12.5px;color:rgba(241,245,255,.8);font-family:var(--f-mono)}
-.deck .go{font-weight:600;font-size:14px;color:#fff}
-.deck .badge{position:absolute;top:14px;right:14px;font-size:11px;letter-spacing:.06em;color:var(--sky)}
+.deck .orbw{width:68px;height:68px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,#1C4F9C,#0A2B5E 70%)}
+.deck canvas{width:60px;height:60px}
+.deck h3{font-family:var(--f-head);font-size:23px;margin:0;line-height:1.15;color:#0A2B5E}
+.deck .ds{font-size:13.5px;color:#5E6884;margin:3px 0 0}
+.deck .bar{height:8px;border-radius:4px;background:#E6EBF5;overflow:hidden}
+.deck .bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--acc1),var(--acc2));min-width:0}
+.deck .nums{display:flex;justify-content:space-between;font-size:13px;color:#3B4766;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.deck .nums b{color:#0A2B5E;font-weight:600}
+.deck .go{align-self:flex-start;margin-top:2px;font-weight:600;font-size:14px;color:#fff;background:linear-gradient(90deg,var(--acc1),color-mix(in srgb,var(--acc1) 70%,var(--acc2)));padding:8px 16px;border-radius:999px}
+.deck .badge{position:absolute;top:16px;right:16px;font-size:11.5px;font-weight:600;color:var(--acc1);background:color-mix(in srgb,var(--acc2) 18%,#fff);padding:3px 10px;border-radius:999px}
 .deck-foot{margin-top:22px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
 .deck-foot button{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(241,245,255,.85);border-radius:999px;padding:6px 14px;font-size:13px}
 .deck-foot button:hover{border-color:#fff;color:#fff}
@@ -280,7 +286,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
 .sync.dirty i{background:var(--star)} .sync.busy i{background:var(--sky)}
 .modal{position:fixed;inset:0;z-index:80;background:rgba(6,14,34,.55);display:grid;place-items:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px}
 .modal-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);width:100%;max-width:520px;padding:24px;max-height:90vh;overflow:auto}
-.modal-card h3{font-family:var(--f-head);font-size:21px;margin:0 0 6px}
+.modal-card h3{font-family:var(--f-thai-head);font-size:21px;margin:0 0 6px}
 .modal-card p{margin:0 0 12px;font-size:14px;color:var(--muted)}
 .modal-card label.f{display:block;font-size:13px;font-weight:600;margin:12px 0 4px}
 .modal-card input.in{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);font-family:var(--f-mono);font-size:13px}
@@ -340,7 +346,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
 
 <div class="login" id="deckPick" hidden>
   <div class="deck-wrap">
-    <div class="eyebrow" id="dpHello">สวัสดี</div>
+    <div class="eyebrow th" id="dpHello">สวัสดี</div>
     <h2>วันนี้จะเรียนชุดไหนดี</h2>
     <p class="sub">แต่ละชุดเก็บความคืบหน้าแยกกัน คำที่ซ้ำกันระหว่างชุดจะมีป้ายบอกว่าเคยจำได้ในอีกชุดแล้ว</p>
     <div class="decks" id="deckList"></div>
@@ -457,7 +463,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
   </section>
 
   <div class="foot">
-    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) และ “TOEFL Words You Must Know” (PrepScholar) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว · <span id="ver">V3.0</span></span>
+    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) และ “TOEFL Words You Must Know” (PrepScholar) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว · <span id="ver">V3.2</span></span>
     <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span id="backupBox" hidden style="display:inline-flex;gap:6px"><button class="btn" id="expBtn">สำรองความคืบหน้า (.json)</button><label class="btn" style="cursor:pointer">นำเข้าไฟล์สำรอง<input type="file" id="impFile" accept=".json,application/json" hidden></label></span><span id="resetBox"><button class="btn" id="resetBtn">ล้างความคืบหน้า</button></span></span>
   </div>
 </main>
@@ -471,7 +477,7 @@ var RAW_TF = [[1,"abundant","adj.","TF",["มีอยู่มาก อุด�
 <script>
 (function(){
 'use strict';
-var APP_VERSION='V3.0';
+var APP_VERSION='V3.2';
 /* ---------- word sets: progress is kept per set ---------- */
 var DECKS={
   oxford:{id:'oxford',raw:RAW_OX,short:'Oxford',title:'Oxford 5000',suffix:'',lists:true,
@@ -480,7 +486,7 @@ var DECKS={
     lede:'คำศัพท์หลักราว 5,000 คำ ตั้งแต่ A1 ถึง C1 (5,325 รายการ แยกตามชนิดคำ) พร้อมคำแปลไทย ตัวอย่างการใช้ และ checklist ว่าอ่านแล้วหรือจำได้แล้ว เหลี่ยมของลูกแก้วจะสว่างขึ้นตามคำที่จำได้',
     levels:['A1','A2','B1','B2','C1']},
   toefl:{id:'toefl',raw:RAW_TF,short:'TOEFL',title:'TOEFL 326',suffix:'__toefl',lists:false,
-    tag:'TOEFL Essential Words · คำศัพท์เชิงวิชาการ',
+    tag:'TOEFL Essential Words',
     card:'คำศัพท์วิชาการที่พบบ่อยในข้อสอบ TOEFL',
     lede:'326 คำศัพท์เชิงวิชาการที่พบบ่อยในข้อสอบ TOEFL พร้อมคำแปลไทยและตัวอย่างในบริบทการเรียนและงานวิจัย ป้ายระดับบอกว่าคำนั้นอยู่ระดับไหนใน Oxford ส่วนป้าย TOEFL คือคำที่อยู่นอกรายการ Oxford',
     levels:['A1','A2','B1','B2','C1','TF']}
@@ -1003,7 +1009,7 @@ document.addEventListener('keydown',function(e){
 /* ---------- quiz ---------- */
 var QZ=null;
 function renderQuizIntro(){
-  document.getElementById('qzStage').innerHTML='<div class="qz-card" style="text-align:center"><div class="eyebrow" style="color:var(--plum)">ทดสอบความจำ</div><h3 style="font-family:var(--f-head);font-size:24px;margin:6px 0">10 ข้อ ผสมสองแบบ</h3><p style="color:var(--muted);margin:0 auto;max-width:48ch">เลือกความหมายภาษาไทยของคำ และเติมคำที่หายไปในประโยคตัวอย่าง คำที่ตอบถูกจะบันทึกเป็น “จำได้แล้ว” ได้ทันทีเมื่อจบชุด</p><button class="btn primary" style="margin-top:16px;padding:10px 20px" id="qzGo">เริ่มเลย</button></div>';
+  document.getElementById('qzStage').innerHTML='<div class="qz-card" style="text-align:center"><div class="eyebrow th" style="color:var(--plum)">ทดสอบความจำ</div><h3 style="font-family:var(--f-head);font-size:24px;margin:6px 0">10 ข้อ ผสมสองแบบ</h3><p style="color:var(--muted);margin:0 auto;max-width:48ch">เลือกความหมายภาษาไทยของคำ และเติมคำที่หายไปในประโยคตัวอย่าง คำที่ตอบถูกจะบันทึกเป็น “จำได้แล้ว” ได้ทันทีเมื่อจบชุด</p><button class="btn primary" style="margin-top:16px;padding:10px 20px" id="qzGo">เริ่มเลย</button></div>';
   document.getElementById('qzGo').onclick=startQuiz;
 }
 function startQuiz(){
@@ -1027,7 +1033,7 @@ function renderQ(){
     var newKnown=right.filter(function(q){return !S.k.has(q.x.id);});
     st.innerHTML='<div class="qz-card" style="text-align:center"><div class="score">'+right.length+'<span style="font-size:24px;color:var(--faint)">/'+QZ.qs.length+'</span></div><p style="color:var(--muted)">'+(right.length>=8?'ยอดเยี่ยม จำได้แม่นมาก':right.length>=5?'ดีแล้ว ทวนคำที่พลาดอีกนิด':'ค่อย ๆ ทวนใหม่อีกรอบ')+'</p>'+
       '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">'+(newKnown.length?'<button class="btn okb" id="qzSave">บันทึก '+newKnown.length+' คำที่ตอบถูกเป็น “จำได้แล้ว”</button>':'')+'<button class="btn primary" id="qzAgain">ทดสอบอีกชุด</button></div>'+
-      (wrong.length?'<div class="wrong-list"><div style="background:none;border:0;padding:0;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">คำที่ต้องทวน</div>'+wrong.map(function(q){return '<div><b style="font-family:var(--f-head);color:var(--link);font-size:17px">'+esc(q.x.w)+'</b> <span class="pos">'+esc(q.x.p)+'</span> — '+esc(q.x.th.join(' · '))+'<p class="ex-en" style="font-size:14px;margin-top:4px">'+exHTML(q.x.ex)+'</p></div>';}).join('')+'</div>':'')+'</div>';
+      (wrong.length?'<div class="wrong-list"><div style="background:none;border:0;padding:0;font-size:13px;color:var(--faint)">คำที่ต้องทวน</div>'+wrong.map(function(q){return '<div><b style="font-family:var(--f-head);color:var(--link);font-size:17px">'+esc(q.x.w)+'</b> <span class="pos">'+esc(q.x.p)+'</span> — '+esc(q.x.th.join(' · '))+'<p class="ex-en" style="font-size:14px;margin-top:4px">'+exHTML(q.x.ex)+'</p></div>';}).join('')+'</div>':'')+'</div>';
     if(newKnown.length)document.getElementById('qzSave').onclick=function(){newKnown.forEach(function(q){setKnown(q.x.id,true);});persist();renderHeader();this.disabled=true;this.textContent='บันทึกแล้ว ✓';toast('บันทึก '+newKnown.length+' คำแล้ว');};
     document.getElementById('qzAgain').onclick=startQuiz;
     wrong.forEach(function(q){if(!S.r.has(q.x.id))setRead(q.x.id,true);});
@@ -1142,8 +1148,8 @@ function showDeckPick(){
   box.innerHTML=Object.keys(DECKS).map(function(id){
     var d=DECKS[id],c=deckCounts(id),pct=c.n?c.k/c.n:0;
     return '<button type="button" class="deck'+(id===last?' last':'')+'" data-deck="'+id+'">'+(id===last?'<span class="badge">เรียนล่าสุด</span>':'')+
-      '<div class="top"><canvas id="dorb_'+id+'" width="128" height="128" aria-hidden="true"></canvas><div><h3>'+esc(d.title)+'</h3><p class="ds">'+esc(d.card)+'</p></div></div>'+
-      '<div class="nums"><span>จำได้ '+c.k.toLocaleString()+' / '+c.n.toLocaleString()+'</span><span>อ่านแล้ว '+c.r.toLocaleString()+'</span></div>'+
+      '<div class="top"><span class="orbw"><canvas id="dorb_'+id+'" width="120" height="120" aria-hidden="true"></canvas></span><div><h3>'+esc(d.title)+'</h3><p class="ds">'+esc(d.card)+'</p></div></div>'+
+      '<div class="nums"><span>จำได้ <b>'+c.k.toLocaleString()+'</b> / '+c.n.toLocaleString()+'</span><span>อ่านแล้ว <b>'+c.r.toLocaleString()+'</b></span></div>'+
       '<div class="bar"><i style="width:'+(pct*100).toFixed(1)+'%"></i></div>'+
       '<span class="go">เรียนชุดนี้ →</span></button>';
   }).join('');
@@ -1171,7 +1177,7 @@ function openDeck(id,quick){
     resetFilters();
     document.getElementById('heroTitle').textContent=DK.title;
     document.getElementById('heroLede').textContent=DK.lede;
-    document.getElementById('heroEyebrow').textContent='สวัสดี '+USER.name+' · '+DK.tag;
+    document.getElementById('heroEyebrow').innerHTML='<span class="th">สวัสดี '+esc(USER.name)+'</span> · '+esc(DK.tag);
     document.getElementById('deckShort').textContent=DK.short;
     document.title='Word Lab · '+DK.short;
     document.getElementById('deckPick').hidden=true; document.getElementById('login').hidden=true;
