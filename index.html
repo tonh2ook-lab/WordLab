@@ -424,7 +424,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
   </section>
 
   <div class="foot">
-    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.2</span></span>
+    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.3</span></span>
     <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span id="backupBox" hidden style="display:inline-flex;gap:6px"><button class="btn" id="expBtn">สำรองความคืบหน้า (.json)</button><label class="btn" style="cursor:pointer">นำเข้าไฟล์สำรอง<input type="file" id="impFile" accept=".json,application/json" hidden></label></span><span id="resetBox"><button class="btn" id="resetBtn">ล้างความคืบหน้า</button></span></span>
   </div>
 </main>
@@ -437,7 +437,7 @@ var RAW = [[1,"a, an","indefinite article","A1",["คำนำหน้านา
 <script>
 (function(){
 'use strict';
-var APP_VERSION='V2.2';
+var APP_VERSION='V2.3';
 var W=RAW.map(function(a){return {id:a[0],w:a[1],p:a[2],l:a[3],th:a[4],ex:a[5],exth:a[6],note:a[7]||'',src:a[8],o:a[9]};});
 var OLDMAP={}; W.forEach(function(x){if(x.o)OLDMAP[x.o]=x.id;});
 var LEVELS=['A1','A2','B1','B2','C1'], LVN={}; LEVELS.forEach(function(l){LVN[l]=W.filter(function(x){return x.l===l;}).length;});
@@ -505,7 +505,7 @@ function packSheet(d){return {v:2,enc:'bits',user:d.user,t:d.t,goal:d.goal,lvl:d
 function unpackSheet(o){if(!o)return null;if(o.enc!=='bits')return o;return {v:2,user:o.user,t:o.t,goal:o.goal,lvl:o.lvl,days:o.days||{},r:b64ToIds(o.r),k:b64ToIds(o.k),s:b64ToIds(o.s)};}
 function sheetJSON(r){return r.json().then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||'Sheet ตอบกลับผิดรูปแบบ');return j;});}
 function sheetRead(){return fetch(CLOUD_URL+'?action=get&user='+encodeURIComponent(USER.id)+'&_='+Date.now(),{cache:'no-store',redirect:'follow'}).then(sheetJSON).then(function(j){return unpackSheet(j.data);});}
-function sheetWrite(d){var body=JSON.stringify({action:'put',user:USER.id,data:packSheet(d)});var opt={method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body};return fetch(CLOUD_URL,opt).then(sheetJSON);}
+function sheetWrite(d){var body=JSON.stringify({action:'put',user:USER.id,data:packSheet(d)});var opt={method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body};if(body.length<60000)opt.keepalive=true;return fetch(CLOUD_URL,opt).then(sheetJSON);}
 var CLOUD={kind:'none',ready:false,db:null}, pushTimer=null, pushing=Promise.resolve();
 function ghCfg(){return {token:lsGet('wordlab.gh.token')||'',gist:lsGet('wordlab.gh.gist')||''};}
 function ghFile(){return 'wordlab_'+USER.id+'.json';}
@@ -578,33 +578,58 @@ function cloudStart(){
     });
   }).catch(function(e){setSync('err',e&&e.message);});
 }
+/* push right after every tap; taps that land while a push is running ride along in one follow-up push */
+var inFlight=false, again=false, lastCheck=0;
 function pushNow(){
   clearTimeout(pushTimer); pushTimer=null;
   if(!CLOUD.ready||!USER)return Promise.resolve();
-  var who=USER.id;
-  pushing=pushing.then(function(){
+  if(inFlight){again=true;return pushing;}
+  var who=USER.id; inFlight=true; again=false; setSync('busy');
+  pushing=cloudRead().then(function(remote){
     if(!USER||USER.id!==who)return;
-    setSync('busy');
-    return cloudRead().then(function(remote){
-      if(remote&&(+remote.t||0)>getSynced()&&(+remote.t||0)!==S.t){mergeInto(remote);S.t=Date.now();saveLocal();renderAll();}
-      var data=serialize();
-      return cloudWrite(data).then(function(){setSynced(data.t);setSync('cloud');});
-    });
-  }).catch(function(e){setSync('err',e&&e.message);});
+    if(remote&&(+remote.t||0)>getSynced()&&(+remote.t||0)!==S.t){mergeInto(remote);S.t=Date.now();saveLocal();renderAll();}
+    var data=serialize();
+    return cloudWrite(data).then(function(){setSynced(data.t);lastCheck=Date.now();if(!again)setSync('cloud');});
+  }).catch(function(e){setSync('err',e&&e.message);}).then(function(){
+    inFlight=false;
+    if(again&&USER&&USER.id===who)return pushNow();
+  });
   return pushing;
 }
 function persist(){
   S.t=Date.now(); saveLocal();
   if(!CLOUD.ready)return;
   setSync('dirty'); clearTimeout(pushTimer);
-  pushTimer=setTimeout(pushNow,CLOUD.kind==='db'?900:2500);
+  pushTimer=setTimeout(pushNow,250);
 }
-document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&pushTimer)pushNow();});
+/* check the cloud for changes made on another device */
+function pollNow(){
+  if(!CLOUD.ready||!USER||inFlight||pushTimer)return Promise.resolve();
+  if(document.visibilityState==='hidden')return Promise.resolve();
+  var who=USER.id; inFlight=true; lastCheck=Date.now();
+  return cloudRead().then(function(remote){
+    if(!USER||USER.id!==who)return;
+    var rt=remote?(+remote.t||0):0, synced=getSynced();
+    if(remote&&rt>synced){
+      if(S.t>synced){mergeInto(remote);S.t=Date.now();saveLocal();inFlight=false;renderAll();return pushNow();}
+      load(remote);saveLocal();setSynced(rt);renderAll();
+      toast('อัปเดตความคืบหน้าจากอีกเครื่องแล้ว');
+    }else if(S.t>synced){inFlight=false;return pushNow();}
+    setSync('cloud');
+  }).catch(function(e){setSync('err',e&&e.message);}).then(function(){inFlight=false;});
+}
+setInterval(pollNow,60000);
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='hidden'){if(pushTimer)pushNow();}
+  else if(Date.now()-lastCheck>5000)pollNow();   // back to the app: catch up straight away
+});
+window.addEventListener('focus',function(){if(Date.now()-lastCheck>5000)pollNow();});
+window.addEventListener('online',function(){if(S.t>getSynced())pushNow();else pollNow();});
 var lastSyncAt='';
 function setSync(m,msg){
   var el=document.getElementById('sync'); el.className='sync '+m;
   if(m==='cloud'){var d=new Date();lastSyncAt=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);}
-  var txt= m==='cloud'?'ซิงก์คลาวด์แล้ว '+lastSyncAt
+  var txt= m==='cloud'?'ซิงก์แล้ว · เช็กล่าสุด '+lastSyncAt
     : m==='dirty'?'มีการแก้ไข รอซิงก์…'
     : m==='busy'?'กำลังซิงก์…'
     : m==='err'?'ซิงก์ไม่สำเร็จ ข้อมูลยังอยู่ในเครื่องนี้'
