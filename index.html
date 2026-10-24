@@ -424,7 +424,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
   </section>
 
   <div class="foot">
-    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.1</span></span>
+    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.2</span></span>
     <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span id="backupBox" hidden style="display:inline-flex;gap:6px"><button class="btn" id="expBtn">สำรองความคืบหน้า (.json)</button><label class="btn" style="cursor:pointer">นำเข้าไฟล์สำรอง<input type="file" id="impFile" accept=".json,application/json" hidden></label></span><span id="resetBox"><button class="btn" id="resetBtn">ล้างความคืบหน้า</button></span></span>
   </div>
 </main>
@@ -437,7 +437,7 @@ var RAW = [[1,"a, an","indefinite article","A1",["คำนำหน้านา
 <script>
 (function(){
 'use strict';
-var APP_VERSION='V2.1';
+var APP_VERSION='V2.2';
 var W=RAW.map(function(a){return {id:a[0],w:a[1],p:a[2],l:a[3],th:a[4],ex:a[5],exth:a[6],note:a[7]||'',src:a[8],o:a[9]};});
 var OLDMAP={}; W.forEach(function(x){if(x.o)OLDMAP[x.o]=x.id;});
 var LEVELS=['A1','A2','B1','B2','C1'], LVN={}; LEVELS.forEach(function(l){LVN[l]=W.filter(function(x){return x.l===l;}).length;});
@@ -494,7 +494,18 @@ function getSynced(){return +(lsGet(userKey()+'.synced')||0);}
 function setSynced(t){lsSet(userKey()+'.synced',String(t));}
 
 /* ---------- cloud: claude.ai storage inside Claude, GitHub Gist everywhere else ---------- */
+/* Paste the Google Apps Script web-app URL (ends in /exec) between the quotes.
+   With it set, everyone syncs just by signing in with their code — no token needed. */
+var CLOUD_URL='https://script.google.com/macros/s/AKfycbwhekaB1_1eIbSgJce1V5nFAOz8xNzFd-zho5saNRwxHsx73yoTLOvty9ssOEPfgmk/exec';
 var IN_CLAUDE=!!(window.claude&&window.claude.use);
+/* compact form for the Sheet: each set of ids becomes a bitmap (≈900 characters) */
+function setToB64(set){var a=new Uint8Array(Math.ceil((TOTAL+1)/8));set.forEach(function(i){a[i>>3]|=1<<(i&7);});var s='';for(var j=0;j<a.length;j++)s+=String.fromCharCode(a[j]);return btoa(s);}
+function b64ToIds(b){if(!b)return [];var s=atob(b),out=[];for(var j=0;j<s.length;j++){var c=s.charCodeAt(j);for(var k=0;k<8;k++)if(c&(1<<k))out.push(j*8+k);}return out;}
+function packSheet(d){return {v:2,enc:'bits',user:d.user,t:d.t,goal:d.goal,lvl:d.lvl,days:d.days,r:setToB64(new Set(d.r)),k:setToB64(new Set(d.k)),s:setToB64(new Set(d.s)),kn:d.k.length,rn:d.r.length};}
+function unpackSheet(o){if(!o)return null;if(o.enc!=='bits')return o;return {v:2,user:o.user,t:o.t,goal:o.goal,lvl:o.lvl,days:o.days||{},r:b64ToIds(o.r),k:b64ToIds(o.k),s:b64ToIds(o.s)};}
+function sheetJSON(r){return r.json().then(function(j){if(!j||!j.ok)throw new Error((j&&j.error)||'Sheet ตอบกลับผิดรูปแบบ');return j;});}
+function sheetRead(){return fetch(CLOUD_URL+'?action=get&user='+encodeURIComponent(USER.id)+'&_='+Date.now(),{cache:'no-store',redirect:'follow'}).then(sheetJSON).then(function(j){return unpackSheet(j.data);});}
+function sheetWrite(d){var body=JSON.stringify({action:'put',user:USER.id,data:packSheet(d)});var opt={method:'POST',redirect:'follow',headers:{'Content-Type':'text/plain;charset=utf-8'},body:body};return fetch(CLOUD_URL,opt).then(sheetJSON);}
 var CLOUD={kind:'none',ready:false,db:null}, pushTimer=null, pushing=Promise.resolve();
 function ghCfg(){return {token:lsGet('wordlab.gh.token')||'',gist:lsGet('wordlab.gh.gist')||''};}
 function ghFile(){return 'wordlab_'+USER.id+'.json';}
@@ -509,6 +520,7 @@ function gh(path,method,body){
   });
 }
 function cloudRead(){
+  if(CLOUD.kind==='sheet')return sheetRead();
   if(CLOUD.kind==='db'){
     return CLOUD.db.doc.get().then(function(sn){
       if(sn.exists)return sn.data();
@@ -524,6 +536,7 @@ function cloudRead(){
   });
 }
 function cloudWrite(data){
+  if(CLOUD.kind==='sheet')return sheetWrite(data);
   if(CLOUD.kind==='db')return CLOUD.db.doc.set(data);
   var c=ghCfg(),files={}; files[ghFile()]={content:JSON.stringify(data)};
   if(!c.gist)return gh('/gists','POST',JSON.stringify({description:'Word Lab 5000 · ความคืบหน้าการเรียน',public:false,files:files})).then(function(g){lsSet('wordlab.gh.gist',g.id);var gi=document.getElementById('ghGist');if(gi)gi.value=g.id;});
@@ -540,6 +553,7 @@ function cloudInit(){
       });
     });
   }
+  if(CLOUD_URL){CLOUD.kind='sheet';return Promise.resolve(true);}
   CLOUD.kind='gist'; return Promise.resolve(!!ghCfg().token);
 }
 function cloudStart(){
@@ -583,7 +597,7 @@ function persist(){
   S.t=Date.now(); saveLocal();
   if(!CLOUD.ready)return;
   setSync('dirty'); clearTimeout(pushTimer);
-  pushTimer=setTimeout(pushNow,CLOUD.kind==='gist'?2500:900);
+  pushTimer=setTimeout(pushNow,CLOUD.kind==='db'?900:2500);
 }
 document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&pushTimer)pushNow();});
 var lastSyncAt='';
@@ -594,7 +608,7 @@ function setSync(m,msg){
     : m==='dirty'?'มีการแก้ไข รอซิงก์…'
     : m==='busy'?'กำลังซิงก์…'
     : m==='err'?'ซิงก์ไม่สำเร็จ ข้อมูลยังอยู่ในเครื่องนี้'
-    : (IN_CLAUDE?'บันทึกไว้ในเครื่องนี้':'บันทึกในเครื่องนี้ · ยังไม่เชื่อมคลาวด์');
+    : (IN_CLAUDE||CLOUD_URL?'บันทึกไว้ในเครื่องนี้':'บันทึกในเครื่องนี้ · ยังไม่เชื่อมคลาวด์');
   el.querySelector('span').textContent=txt; el.title=msg||'';
 }
 
@@ -1018,7 +1032,7 @@ function loginAs(id,remember){
   document.getElementById('userName').textContent=USER.name;
   document.getElementById('userAv').textContent=USER.name.charAt(0);
   document.getElementById('heroEyebrow').textContent='สวัสดี '+USER.name+' · The Oxford 3000™ + 5000™ · ระดับ A1–C1';
-  document.getElementById('cloudBtn').hidden=IN_CLAUDE;
+  document.getElementById('cloudBtn').hidden=IN_CLAUDE||!!CLOUD_URL;
   document.getElementById('login').hidden=true;
   document.getElementById('app').hidden=false;
   orbShown=0;
