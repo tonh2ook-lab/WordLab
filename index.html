@@ -424,7 +424,7 @@ mark{background:linear-gradient(transparent 52%,var(--hl) 52%);color:var(--hlink
   </section>
 
   <div class="foot">
-    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.4</span></span>
+    <span>รายการคำจาก The Oxford 3000™ และ 5000™ by CEFR level (© Oxford University Press) · คำแปลและตัวอย่างจัดทำเพื่อการเรียนส่วนตัว ไม่ใช่เนื้อหาของ OUP · <span id="ver">V2.5</span></span>
     <span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center"><span id="backupBox" hidden style="display:inline-flex;gap:6px"><button class="btn" id="expBtn">สำรองความคืบหน้า (.json)</button><label class="btn" style="cursor:pointer">นำเข้าไฟล์สำรอง<input type="file" id="impFile" accept=".json,application/json" hidden></label></span><span id="resetBox"><button class="btn" id="resetBtn">ล้างความคืบหน้า</button></span></span>
   </div>
 </main>
@@ -437,7 +437,7 @@ var RAW = [[1,"a, an","indefinite article","A1",["คำนำหน้านา
 <script>
 (function(){
 'use strict';
-var APP_VERSION='V2.4';
+var APP_VERSION='V2.5';
 var W=RAW.map(function(a){return {id:a[0],w:a[1],p:a[2],l:a[3],th:a[4],ex:a[5],exth:a[6],note:a[7]||'',src:a[8],o:a[9]};});
 var OLDMAP={}; W.forEach(function(x){if(x.o)OLDMAP[x.o]=x.id;});
 var LEVELS=['A1','A2','B1','B2','C1'], LVN={}; LEVELS.forEach(function(l){LVN[l]=W.filter(function(x){return x.l===l;}).length;});
@@ -447,7 +447,8 @@ var TOTAL=W.length;
 /* ---------- users: what they type → name shown in the app ---------- */
 var USERS={
   tonnam:{name:'ต้นน้ำ'},
-  oak:{name:'โอ๊ก'}
+  oak:{name:'โอ๊ค'},
+  being:{name:'บีอิ้ง'}
 };
 var USER=null, SESSION_KEY='wordlab.session';
 
